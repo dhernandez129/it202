@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <meta charset="utf-8">
-        <title>jQuery.parseXML demo</title>
-          <link rel="stylesheet" href="css/cta.css">
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-          <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-            <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-            <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    </head>
+  <head>
+    <meta charset="utf-8">
+      
+    <title>jQuery.parseXML demo</title>
+      
+      <!--External Sheets-->
+      <link rel="stylesheet" href="css/cta.css">
+      <link rel="manifest" href="json/manifest.json">
+      
+      <!--Google Material Design-->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+      <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+          
+      <!--JQuery Library-->
+      <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+          
+      <!-- Add to home screen for Safari on iOS -->
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="apple-mobile-web-app-title" content="Weather PWA">
+      <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+          
+      <!--Tile Icon for Windows-->
+      <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+      <meta name="msapplication-TileColor" content="#2F3BA2">
+
+  </head>
 <body>
 <h1> Bus routes</h1>
 
+  <!--Data goes in here-->
   <div id="Northbound"></div>
   <div id="Eastbound"></div>
   <div id="Southbound"></div>
@@ -38,6 +58,7 @@
             }).done (function (data) {
               console.log(data);
               
+            /*html elements to hold the data*/
               $("#Northbound").append(
                 "<h2>" + "<i>" + "Northbound" + "</i>" + "</h2>"
               );
@@ -54,6 +75,7 @@
                 "<h2>" + "<i>" + "Westbound" + "</i>" + "</h2>"
               );
               
+            /*bus data sent to the holders*/
               $.each(data["bustime-response"]["prd"], function(i,v) {
                   $("#"+ v.rtdir).append(
                     "<p>" + "Route Number:" + v.rt + "<br>"
