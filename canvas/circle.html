@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+        <style>
+            canvas {border:#333 5px solid;}
+        </style>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="400" height="400"></canvas>
+        <script>
+            var mainCanvas = document.getElementById("myCanvas");
+            var mainContext = mainCanvas.getContext("2d");
+             
+            var canvasWidth = mainCanvas.width;
+            var canvasHeight = mainCanvas.height;
+             
+            function draw() {
+            // draw the colored region
+            mainContext.beginPath();
+            mainContext.arc(200, 200, 93, 0, 2 * Math.PI, true);
+            mainContext.fillStyle = "#E2FFC6";
+            mainContext.fill();
+         
+            // draw the stroke
+            mainContext.lineWidth = 20;
+            mainContext.strokeStyle = "#66CC01";
+            mainContext.stroke();
+        }
+            draw();
+        </script>
+    </body>
+</html>

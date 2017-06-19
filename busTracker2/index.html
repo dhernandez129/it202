@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      
+        <title>CTA Bus Tracker</title>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+        
+    </head>
+    
+    <body>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
+          
+          <header class="mdl-layout__header">
+            
+            <div class="mdl-layout__header-row">
+              <span class="mdl-layout-title">CTA Bus Tracker</span>
+            </div>
+            
+            <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+              <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Search</a>
+              <a href="#fixed-tab-2" class="mdl-layout__tab">Buses</a>
+              <a href="#fixed-tab-3" class="mdl-layout__tab">Settings?</a>
+            </div>
+            
+          </header>
+          
+          <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">CTA Bus Tracker</span>
+          </div>
+          <main class="mdl-layout__content">
+            
+            <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+              <div class="page-content">
+                
+                <select id="routes"></select>
+                <select id="directions"></select>
+                <select id="stops"></select>
+                
+                <script>/*global $*/ /*global Dexie*/
+                  var db = new Dexie('trackerApp');
+                  
+                  db.version(1).stores({
+                		stops: '++id, rt, rtnm, dir, stpid, stpnm'
+                	});
+                
+                  $(function () {
+                    
+                    var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+                    var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getroutes";
+                    
+                    $.ajax({
+                      url: apiPassThruUrl,
+                      dataType: "json",
+                      method: 'GET',
+                      data: {"apiEndpoint" : apiEndpoint,
+                            "key" : "iVHFWjskWDBSqVt3iXkNrf6xa",
+                            "format" : "json"}
+                    }).done(function (data) {
+                      
+                      $.each(data["bustime-response"]["routes"], function (i,v) {
+                        var option = $("<option>");
+                        option.attr("value", v.rt);
+                        option.text(v.rt + " - " + v.rtnm);
+                        $("#routes").append(option);
+                      });
+                    });
+                    
+                    $("#routes").on("change", function () {
+                      var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getdirections";
+                      
+                    $.ajax({
+                      url: apiPassThruUrl,
+                      dataType: "json",
+                      method: 'GET',
+                      data: {"apiEndpoint" : apiEndpoint,
+                            "key" : "iVHFWjskWDBSqVt3iXkNrf6xa",
+                            "format" : "json",
+                            "rt" : $("#routes").val()
+                      }
+                    }).done(function (data) {
+                      $("#directions option").remove();
+                      
+                      $.each(data["bustime-response"]["directions"], function (i,v) {
+                        var option = $("<option>");
+                        option.attr("value", v.dir);
+                        option.text(v.dir);
+                        $("#directions").append(option);
+                      });
+                      
+                      $("#directions").on("change", function () {
+                        var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getstops";
+                        
+                        $.ajax({
+                          url: apiPassThruUrl,
+                          dataType: "json",
+                          method: 'GET',
+                          data: {"apiEndpoint" : apiEndpoint,
+                                "key" : "iVHFWjskWDBSqVt3iXkNrf6xa",
+                                "format" : "json",
+                                "rt" : $("#routes").val(),
+                                "dir" : $("#directions").val()
+                          }
+                        }).done(function (data) {
+                          $.each(data["bustime-response"]["stops"], function (i,v) {
+                            var option = $("<option>");
+                            option.attr("value", v.stop);
+                            option.text(v.stpnm);
+                            $("#stops").append(option);
+                          });
+                        });
+                      });
+                      
+                      
+                    });
+                    
+                    });
+                    
+                  });
+                  
+                  
+                </script>
+              </div>
+            </section>
+            
+            <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+              <div class="page-content">
+                
+              </div>
+            </section>
+            
+            <section class="mdl-layout__tab-panel" id="fixed-tab-3">
+              <div class="page-content">
+
+<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Material</th>
+      <th>Quantity</th>
+      <th>Unit price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
+      <td>25</td>
+      <td>$2.90</td>
+    </tr>
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
+      <td>50</td>
+      <td>$1.25</td>
+    </tr>
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
+      <td>10</td>
+      <td>$2.35</td>
+    </tr>
+  </tbody>
+</table>
+
+              </div>
+            </section>
+            
+          </main>
+        </div>
+    </body>
+</html>
